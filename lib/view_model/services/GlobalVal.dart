@@ -60,7 +60,7 @@ static Future<void> updateIP(String ip) async {
       {'id': 1, 'IP': ip},
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
-    log("IP $ip", name: 'DatabaseHelper');
+    //log("IP $ip", name: 'DatabaseHelper');
   }
 }
 
@@ -78,7 +78,7 @@ static Future<void> updateEmpNo(String empNo) async {
       {'id': 1, 'empNo': empNo},
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
-    log("empNo $empNo", name: 'DatabaseHelper');
+    //log("empNo $empNo", name: 'DatabaseHelper');
   }
 }
 
@@ -96,7 +96,7 @@ static Future<void> updatename(String empNo) async {
       {'id': 1, 'empNo': empNo},
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
-    log("name $empNo", name: 'DatabaseHelper');
+  //  log("name $empNo", name: 'DatabaseHelper');
   }
 }
 
@@ -124,7 +124,7 @@ static Future<void> updatePassword(String password) async {
       {'id': 1, 'password': password},
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
-    log("Password $password", name: 'DatabaseHelper');
+   // log("Password $password", name: 'DatabaseHelper');
   }
 }
 
@@ -136,7 +136,7 @@ static Future<void> updateLang(String lang) async {
     where: 'id = ?',
     whereArgs: [1],
   );
-      log("Lang1111 $lang", name: 'DatabaseHelper');
+     // log("Lang1111 $lang", name: 'DatabaseHelper');
 
   if (rowsUpdated == 0) {
     await db.insert(
@@ -144,7 +144,7 @@ static Future<void> updateLang(String lang) async {
       {'id': 1, 'Lan': lang},
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
-    log("Lang $lang", name: 'DatabaseHelper');
+    //log("Lang $lang", name: 'DatabaseHelper');
   }
 }
 
@@ -209,7 +209,7 @@ static Future<String> getLang() async {
   );
 
   if (maps.isNotEmpty) {
-    log(maps.first['Lan'] , name: 'DatabaseHelperLang');
+   // log(maps.first['Lan'] , name: 'DatabaseHelperLang');
     return maps.first['Lan'];
   }
   return '';

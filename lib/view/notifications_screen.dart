@@ -204,6 +204,8 @@ class _notifications_screenState extends State<notifications_screen> {
                                   : Center(
                                 child: Text("no data"),
                               );
+                            case null:
+                              // TODO: Handle this case.
                           }
                           return Container();
                         }),

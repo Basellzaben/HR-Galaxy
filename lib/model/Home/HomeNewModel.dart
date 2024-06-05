@@ -37,6 +37,7 @@ class HomeNModel {
   String? empSumLeave;
   String? empBalanceSick;
   String? imagePath;
+  int? sex;
 
   HomeNModel(
       {this.arabicName,
@@ -53,7 +54,8 @@ class HomeNModel {
         this.countWar,
         this.empSumLeave,
         this.empBalanceSick,
-        this.imagePath
+        this.imagePath,
+        this.sex
       });
 
   HomeNModel.fromJson(Map<String, dynamic> json) {
@@ -72,6 +74,7 @@ class HomeNModel {
     empSumLeave = json['empSumLeave'];
     empBalanceSick = json['empBalanceSick'];
     imagePath = json['imagePath'];
+    sex = json['sex'];
   }
 
   Map<String, dynamic> toJson() {
@@ -91,6 +94,7 @@ class HomeNModel {
     data['empSumLeave'] = this.empSumLeave;
     data['empBalanceSick'] = this.empBalanceSick;
     data['imagePath'] = this.imagePath;
+    data['sex'] = this.sex;
     return data;
   }
 }

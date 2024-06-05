@@ -1,15 +1,15 @@
 
 
-import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
+// ignore_for_file: non_constant_identifier_names
+
+import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:mvvm/data/response/api_response.dart';
 import 'package:mvvm/model/Home/GetImageModel.dart';
 import 'package:mvvm/model/Home/HomeNewModel.dart';
-import 'package:mvvm/model/movies_model.dart';
 import 'package:mvvm/respository/Home/HomeNewRepository.dart';
-import 'package:mvvm/respository/home_repository.dart';
 import 'package:mvvm/view_model/auth_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -24,10 +24,17 @@ class HomeNewViewModel with ChangeNotifier {
   String? long ="0.0";
   String? ID ="0.0";
   String? ActionNo ="0.0";
-  setData (String? lat,String? long,String? ID,String? ActionNo)
+  Position? _currentPosition;
+  Position? get currentPosition => _currentPosition;
+  setcurrentPosition(Position? value) {
+    _currentPosition = value;
+    notifyListeners();
+  }
+
+  setData (String? ID,String? ActionNo)
   {
-    this.lat=lat;
-    this.long=long;
+    lat=_currentPosition!.latitude.toString();
+    long=_currentPosition!.longitude.toString();
     this.ID=ID;
     this.ActionNo=ActionNo;
     notifyListeners();
@@ -182,4 +189,52 @@ print(data.toString());
   }
 
 
+  Future<bool> _handleLocationPermission(BuildContext context) async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Location services are disabled. Please enable the services')));
+      return false;
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Location permissions are denied')));
+        return false;
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Location permissions are permanently denied, we cannot request permissions.')));
+      return false;
+    }
+    return true;
+  }
+  
+  Future<void> getCurrentPosition(BuildContext context) async {
+    setLoading(true);
+    final hasPermission = await _handleLocationPermission(context);
+
+    if (!hasPermission) return;
+    Position _position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high,);
+    print(_position.latitude);
+    setcurrentPosition(_position);
+    setLoading(false);
+
+    // await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+    //     .then((Position position) {
+    //       print(position.latitude);
+    //       setcurrentPosition(position);
+    
+    // }).catchError((e) {
+    //   debugPrint(e);
+    // });
+  }
 }

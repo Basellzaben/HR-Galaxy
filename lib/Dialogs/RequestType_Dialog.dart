@@ -138,6 +138,8 @@ print(context
                                 );
                               });
 
+                        case null:
+                          // TODO: Handle this case.
                       }
                       return Container();
                     }):

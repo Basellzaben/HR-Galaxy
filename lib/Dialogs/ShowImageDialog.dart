@@ -124,6 +124,8 @@ class _ShowImageDialogState extends State<ShowImageDialog> {
                             );
 
 
+                        case null:
+                          // TODO: Handle this case.
                       }
                       return Container();
                     })

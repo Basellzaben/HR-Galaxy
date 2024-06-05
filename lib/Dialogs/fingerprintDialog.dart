@@ -103,6 +103,8 @@ class _fingerprintDialogState extends State<fingerprintDialog> {
                       );
 
 
+                    case null:
+                      // TODO: Handle this case.
                   }
                   return Container();
                 },

@@ -489,6 +489,8 @@ class _Salaryslip_ScreenState extends State<Salaryslip_Screen> {
 
                                 ],
                               );
+                            case null:
+                              // TODO: Handle this case.
                           }
                           return Container();
                         }),
@@ -561,6 +563,8 @@ class _Salaryslip_ScreenState extends State<Salaryslip_Screen> {
                                 alignment:Alignment.topCenter ,
                                       child: Text("no data"),
                                     );
+                            case null:
+                              // TODO: Handle this case.
                           }
                           return Container();
                         }),
@@ -633,6 +637,8 @@ class _Salaryslip_ScreenState extends State<Salaryslip_Screen> {
                                 alignment:Alignment.topCenter ,
                                 child: Text("no data"),
                               );
+                            case null:
+                              // TODO: Handle this case.
                           }
                           return Container();
                         }),
@@ -706,6 +712,8 @@ class _Salaryslip_ScreenState extends State<Salaryslip_Screen> {
                                 alignment:Alignment.topCenter ,
                                 child: Text("no data"),
                               );
+                            case null:
+                              // TODO: Handle this case.
                           }
                           return Container();
                         }),
@@ -781,6 +789,8 @@ class _Salaryslip_ScreenState extends State<Salaryslip_Screen> {
                                 alignment:Alignment.topCenter ,
                                 child: Text("no data"),
                               );
+                            case null:
+                              // TODO: Handle this case.
                           }
                           return Container();
                         }),

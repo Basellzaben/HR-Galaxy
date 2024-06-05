@@ -249,6 +249,8 @@ class _RequestType_DialogState extends State<DitalsRequest_Dialog> {
                                               ),
                                             );
                                           });
+                                    case null:
+                                      // TODO: Handle this case.
                                   }
                                   return Container();
                                 },
@@ -320,6 +322,8 @@ class _RequestType_DialogState extends State<DitalsRequest_Dialog> {
                         ],
                       ),
                     );
+                  case null:
+                    // TODO: Handle this case.
                 }
                 return Container();
               })),

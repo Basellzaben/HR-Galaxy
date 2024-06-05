@@ -1,4 +1,4 @@
-// ignore_for_file: library_private_types_in_public_api, unused_field, use_build_context_synchronously
+// ignore_for_file: library_private_types_in_public_api, unused_field, use_build_context_synchronously, deprecated_member_use, non_constant_identifier_names
 
 import 'dart:io';
 
@@ -9,7 +9,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:mvvm/data/response/status.dart';
 import 'package:mvvm/utils/routes/routes_name.dart';
@@ -36,7 +35,6 @@ class _HomeHRScreenState extends State<HomeHRScreen> {
   bool _isEnabled = true;
   HomeNewViewModel homeViewViewModel = HomeNewViewModel();
   String? _currentAddress;
-  Position? _currentPosition;
   ScrollController? scrollController;
   bool scrollVisible = true;
 
@@ -53,52 +51,11 @@ class _HomeHRScreenState extends State<HomeHRScreen> {
     return null;
   }
 
-  Future<bool> _handleLocationPermission() async {
-    bool serviceEnabled;
-    LocationPermission permission;
 
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text(
-              'Location services are disabled. Please enable the services')));
-      return false;
-    }
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Location permissions are denied')));
-        return false;
-      }
-    }
-    if (permission == LocationPermission.deniedForever) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text(
-              'Location permissions are permanently denied, we cannot request permissions.')));
-      return false;
-    }
-    return true;
-  }
-
-  Future<void> _getCurrentPosition() async {
-    final hasPermission = await _handleLocationPermission();
-
-    if (!hasPermission) return;
-    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
-        .then((Position position) {
-      setState(() => _currentPosition = position);
-    }).catchError((e) {
-      debugPrint(e);
-    });
-  }
 
   @override
   void initState() {
-    // TODO: implement initState
     Clear();
-    // convertHexToUint8List();
     setState(() {
       GloablVal.User = context.read<AuthViewModel>().UserName;
       print(GloablVal.User);
@@ -114,16 +71,13 @@ class _HomeHRScreenState extends State<HomeHRScreen> {
         setDialVisible(scrollController!.position.userScrollDirection ==
             ScrollDirection.forward);
       });
-    //x = MediaQuery.sizeOf(context).height * 0.1;
     String currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
-    print(context.read<AuthViewModel>().UserName);
     var LanguageProvider1 = Provider.of<Language>(context, listen: false);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context
           .read<Vacationsviewmodel>()
           .setINOUT1(-1, LanguageProvider1.Llanguage('outpass'));
     });
-
     Map data = {
       'EmployeeNo': context.read<AuthViewModel>().UserName,
       'StartDate': currentDate.toString(),
@@ -132,23 +86,8 @@ class _HomeHRScreenState extends State<HomeHRScreen> {
       final viewModel = context.read<HomeNewViewModel>();
       viewModel.getHomeData(data, LanguageProvider1.getLanguage(), context);
     });
-    bool check = false;
     super.initState();
   }
-
-  // void convertHexToUint8List() {
-  //   try {
-  //     Uint8List bytes =
-  //         Uint8List.fromList(HEX.decode(imge!.replaceAll("0x", "")));
-
-  //     setState(() {
-  //       imageData = bytes;
-  //     });
-  //   } catch (e) {
-  //     print("Error converting hex to Uint8List: $e");
-  //   }
-  // }
-
   void setDialVisible(bool value) {
     setState(() {
       scrollVisible = value;
@@ -171,25 +110,11 @@ class _HomeHRScreenState extends State<HomeHRScreen> {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
     statusBarHeight = MediaQuery.of(context).padding.top;
-    double? x = 0.00122 * MediaQuery.of(context).size.height;
-    /* String? imge ="0x89504E470D0A1A0A0000000D4948445200000435000004380802000000968C7068000000097048";
-    Uint8List bytes = Uint8List.fromList(HEX.decode(imge));
-    Uint8List? imageData;
-
-    setState(() {
-      imageData = bytes;
-    });*/
-    // var vacationsViewModel = Provider.of<Vacationsviewmodel>(context, listen: false);
-
     double sc = MediaQuery.of(context).textScaleFactor;
-    final ViewMode = Provider.of<HomeNewViewModel>(context);
-    double unitHeightValue = MediaQuery.of(context).size.height * 0.00122;
     var LanguageProvider = Provider.of<Language>(context, listen: false);
     return WillPopScope(
       onWillPop: () async {
         exit(0);
-
-        return false;
       },
       child: Directionality(
         textDirection: LanguageProvider.getDirection(),
@@ -199,7 +124,7 @@ class _HomeHRScreenState extends State<HomeHRScreen> {
                 builder: (context, value, vaction, _) {
               switch (value.HomeData.status) {
                 case Status.LOADING:
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 case Status.ERROR:
                   return Center(child: Text(value.HomeData.message.toString()));
                 case Status.COMPLETED:
@@ -228,7 +153,7 @@ class _HomeHRScreenState extends State<HomeHRScreen> {
                   }
                   return SafeArea(
                       child: ClipRRect(
-                    borderRadius: BorderRadius.only(
+                    borderRadius: const BorderRadius.only(
                       bottomRight: Radius.circular(30),
                       bottomLeft: Radius.circular(30),
                     ),
@@ -244,7 +169,7 @@ class _HomeHRScreenState extends State<HomeHRScreen> {
                           children: [
                             Container(
                               margin:
-                                  EdgeInsets.only(left: 10, right: 10, top: 10),
+                                  const EdgeInsets.only(left: 10, right: 10, top: 10),
                               child: Row(
                                 children: [
                                   ClipRRect(
@@ -257,35 +182,38 @@ class _HomeHRScreenState extends State<HomeHRScreen> {
                                           color: ColorTheme(context),
                                         ),
                                       ),
-                                      child: Padding(
-                                        padding: EdgeInsets.all(0),
-                                        child: value.HomeData.data!.list![0]
-                                                    .imagePath! ==
-                                                "-1"
-                                            ? Image.asset(
-                                                "assest/img.png",
-                                                width: 60,
-                                                height: 60,
-                                                fit: BoxFit.cover,
-                                              ): CachedNetworkImage(
-                                                imageUrl: value.HomeData.data!
-                                                    .list![0].imagePath!,
-                                                placeholder: (context, url) =>
-                                                    CircularProgressIndicator(),
-                                                errorWidget:
-                                                    (context, url, error) =>
-                                                        Icon(Icons.error),
-                                                width: 60,
-                                                height: 60,
-                                                fit: BoxFit.cover,
-                                              ),
-                                      ),
+                                      child: value.HomeData.data!.list![0]
+                                                  .imagePath! ==
+                                              "-1"
+                                          ? (value.HomeData.data!.list![0].sex == 2 ? Image.asset(
+                                              "assest/img2.png",
+                                              width: 60,
+                                              height: 60,
+                                              fit: BoxFit.cover,
+                                          ):Image.asset(
+                                              "assest/img.png",
+                                              width: 60,
+                                              height: 60,
+                                              fit: BoxFit.cover,
+                                          )
+                                            ): CachedNetworkImage(
+                                              imageUrl: value.HomeData.data!
+                                                  .list![0].imagePath!,
+                                              placeholder: (context, url) =>
+                                                  const CircularProgressIndicator(),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      const Icon(Icons.error),
+                                              width: 60,
+                                              height: 60,
+                                              fit: BoxFit.cover,
+                                            ),
                                     ),
                                   ),
                                   Expanded(
                                     flex: 1,
                                     child: Container(
-                                      margin: EdgeInsets.only(
+                                      margin: const EdgeInsets.only(
                                           left: 10, right: 10, top: 0),
                                       child: AutoSizeText(
                                         LanguageProvider.getLanguage() == 'AR'
@@ -338,9 +266,9 @@ class _HomeHRScreenState extends State<HomeHRScreen> {
                               ),
                             ),
                             Container(
-                              margin: EdgeInsets.only(left: 5, right: 5),
+                              margin: const EdgeInsets.only(left: 5, right: 5),
                               child: Padding(
-                                padding: EdgeInsets.only(
+                                padding: const EdgeInsets.only(
                                     left: 0, right: 0, top: 5, bottom: 5),
                                 child: SizedBox(
                                   height:
@@ -376,9 +304,10 @@ class _HomeHRScreenState extends State<HomeHRScreen> {
                                             Lottiepath: "assest/fingerprint1.json",
                                             onYesPressed: () async {
                                               if (_isEnabled) {
-                                                await _getCurrentPosition();
+                                                await value.getCurrentPosition(context);
                                                 String? deviceId =
                                                     await _getId();
+                                                    print(value.currentPosition);
                                                 String? x = "0";
                                                 if (int.parse(value
                                                         .HomeData
@@ -390,15 +319,8 @@ class _HomeHRScreenState extends State<HomeHRScreen> {
                                                 } else {
                                                   x = "1";
                                                 }
-                                                context
-                                                    .read<HomeNewViewModel>()
+                                               value
                                                     .setData(
-                                                        _currentPosition!
-                                                            .latitude
-                                                            .toString(),
-                                                        _currentPosition!
-                                                            .longitude
-                                                            .toString(),
                                                         deviceId,
                                                         x);
                                                 Map data = {
@@ -422,9 +344,9 @@ class _HomeHRScreenState extends State<HomeHRScreen> {
 
                                                 WidgetsBinding.instance!
                                                     .addPostFrameCallback((_) {
-                                                  ViewMode.GetCheckInOut(
+                                                  value.GetCheckInOut(
                                                       data, context);
-                                                  if (ViewMode
+                                                  if (value
                                                           .CheckINO.status ==
                                                       Status.COMPLETED) {
                                                     String currentDate =
@@ -482,9 +404,12 @@ class _HomeHRScreenState extends State<HomeHRScreen> {
                                                   width: 1,
                                                   color: ColorTheme(context)),
                                             ),
+                                            height: MediaQuery.sizeOf(context)
+                                                    .width /
+                                                3,
                                             child: Container(
-                                              padding: EdgeInsets.all(20),
-                                              child: !ViewMode.loading
+                                              padding: const EdgeInsets.all(20),
+                                              child: !value.loading
                                                   ? SvgPicture.asset(
                                                       "assest/fingerprint.svg",
                                                       semanticsLabel:
@@ -493,13 +418,10 @@ class _HomeHRScreenState extends State<HomeHRScreen> {
                                                           ColorTheme(context),
                                                       fit: BoxFit.contain,
                                                     )
-                                                  : Center(
+                                                  : const Center(
                                                       child:
                                                           CircularProgressIndicator()),
                                             ),
-                                            height: MediaQuery.sizeOf(context)
-                                                    .width /
-                                                3,
                                           ),
                                         ),
                                       ),
@@ -509,7 +431,7 @@ class _HomeHRScreenState extends State<HomeHRScreen> {
                                                 13,
                                       ),
                                       Padding(
-                                        padding: EdgeInsets.only(
+                                        padding: const EdgeInsets.only(
                                             left: 0, right: 0, top: 3),
                                         child: Column(
                                           crossAxisAlignment:
@@ -661,7 +583,7 @@ class _HomeHRScreenState extends State<HomeHRScreen> {
                                                 )
                                               ],
                                             ),
-                                            SizedBox(
+                                            const SizedBox(
                                               height: 2,
                                             ),
                                             InkWell(
@@ -725,7 +647,7 @@ class _HomeHRScreenState extends State<HomeHRScreen> {
                             Container(
                               alignment: Alignment.topLeft,
                               width: MediaQuery.sizeOf(context).width,
-                              margin: EdgeInsets.only(left: 15, right: 15),
+                              margin: const EdgeInsets.only(left: 15, right: 15),
                               child: Row(
                                 children: [
                                   textWidget(
@@ -745,14 +667,14 @@ class _HomeHRScreenState extends State<HomeHRScreen> {
                             Container(
                                 width: MediaQuery.sizeOf(context).width,
                                 height: MediaQuery.sizeOf(context).width / 11,
-                                margin: EdgeInsets.only(left: 25, right: 25),
+                                margin: const EdgeInsets.only(left: 25, right: 25),
                                 child: fadedLine(
                                     LanguageProvider.Llanguage('vacations'),
                                     20 / sc,
                                     context)),
                             Container(
                               margin:
-                                  EdgeInsets.only(left: 25, right: 25, top: 10),
+                                  const EdgeInsets.only(left: 25, right: 25, top: 10),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -784,14 +706,14 @@ class _HomeHRScreenState extends State<HomeHRScreen> {
                             Container(
                                 width: MediaQuery.sizeOf(context).width,
                                 height: MediaQuery.sizeOf(context).width / 10,
-                                margin: EdgeInsets.only(left: 25, right: 25),
+                                margin: const EdgeInsets.only(left: 25, right: 25),
                                 child: fadedLine(
                                     LanguageProvider.Llanguage('Requests1'),
                                     20 / sc,
                                     context)),
 
                             Container(
-                              margin: EdgeInsets.only(left: 25, right: 25),
+                              margin: const EdgeInsets.only(left: 25, right: 25),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -849,11 +771,11 @@ class _HomeHRScreenState extends State<HomeHRScreen> {
                               ),
                             ),
                             //////////////////////////////////////////////////////////////////
-                            SizedBox(
+                            const SizedBox(
                               height: 20,
                             ),
                             Container(
-                              margin: EdgeInsets.only(left: 25, right: 25),
+                              margin: const EdgeInsets.only(left: 25, right: 25),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -913,7 +835,7 @@ class _HomeHRScreenState extends State<HomeHRScreen> {
                               ),
                             ),
                             //////////////////////////////////////////////////////////////////
-                            SizedBox(
+                            const SizedBox(
                               height: 20,
                             )
                           ],
@@ -921,6 +843,8 @@ class _HomeHRScreenState extends State<HomeHRScreen> {
                       ),
                     ),
                   ));
+                case null:
+                  // TODO: Handle this case.
               }
               return Container();
             })),

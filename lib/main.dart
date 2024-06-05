@@ -140,7 +140,7 @@ Future<void> onStart(ServiceInstance service) async {
           final String Lan = await DatabaseHelper.getLang();
           String name =await getname();
           int empNo = 0;
-          log("value $name" , name: 'value');
+         // log("value $name" , name: 'value');
 if(name == "null" ){
   empNo = 0;
 }else if (name == ""){
@@ -155,7 +155,7 @@ if(name == "null" ){
             'id': 1,
             'date':  Lan,
           };
-          print(data.toString());
+         // print(data.toString());
           x1 = await GetNotifidataSend(data);
         } else {
           await Future.delayed(Duration(seconds: 3));
@@ -168,12 +168,12 @@ if(name == "null" ){
             'id': 1,
             'date':  Lan,
           };
-          print(data.toString());
+          //print(data.toString());
           x1 = await GetNotifidataSend(data);
         }
       }).onError((error, stackTrace) {
         if (kDebugMode) {
-          print(error.toString());
+        //  print(error.toString());
         }
       });
 
@@ -195,11 +195,11 @@ if(name == "null" ){
 Future<GetNotifiModel> GetNotifidataSend(dynamic data) async {
   BaseApiServices _apiServices = NetworkApiService();
   try {
-    print(AppUrl.GetNotifDataSend);
+   // print(AppUrl.GetNotifDataSend);
     String json = jsonEncode(data);
-    print(json.toString());
+   // print(json.toString());
     String ip = await DatabaseHelper.getIP();
-    log("ip $ip");
+   // log("ip $ip");
     dynamic response = await _apiServices.getPostApiResponse1(
      ip + '/GetNotifDataSend',
       json,
@@ -207,7 +207,7 @@ Future<GetNotifiModel> GetNotifidataSend(dynamic data) async {
 
     return response = GetNotifiModel.fromJson(response);
   } catch (e) {
-    print("response2" + e.toString());
+   // print("response2" + e.toString());
     return GetNotifiModel();
   }
 }

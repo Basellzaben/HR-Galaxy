@@ -126,6 +126,8 @@ class _LeaveDialogState extends State<LeaveDialog> {
                                 );
                               });
 
+                        case null:
+                          // TODO: Handle this case.
                       }
                       return Container();
                     }),

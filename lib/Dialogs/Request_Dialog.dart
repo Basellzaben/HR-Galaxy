@@ -124,6 +124,8 @@ class _Request_DialogState extends State<Request_Dialog> {
                                       style: ColorBlack(context),))),
                             );
                           });
+                    case null:
+                      // TODO: Handle this case.
                   }
                   return Container();
                 }),

@@ -122,12 +122,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       child: homeViewViewModel.HomeData.data!
                                                   .list![0].imagePath! ==
                                               "-1"
-                                          ? Image.asset(
-                                           "assest/img.png",
-
+                                          ? (homeViewViewModel.HomeData.data!.list![0].sex == 2 ? Image.asset(
+                                              "assest/img2.png",
                                               width: 100,
                                               height: 100,
                                               fit: BoxFit.cover,
+                                          ):Image.asset(
+                                              "assest/img.png",
+                                              width: 100,
+                                              height: 100,
+                                              fit: BoxFit.cover,
+                                          )
                                             )
                                           : CachedNetworkImage(
                                               imageUrl: homeViewViewModel

@@ -1,11 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mvvm/Dialogs/DitalsRequest_Dialog.dart';
 import 'package:mvvm/Dialogs/RequestType_Dialog.dart';
 import 'package:mvvm/Dialogs/Request_Dialog.dart';
 
-import 'package:mvvm/Dialogs/VacationsDialog.dart';
 import 'package:mvvm/data/response/status.dart';
 
 import 'package:mvvm/res/components/round_button.dart';
@@ -13,10 +11,8 @@ import 'package:mvvm/res/components/round_button.dart';
 import 'package:mvvm/view_model/MyRequest_View_Model/My_Request_ViewModel.dart';
 import 'package:mvvm/view_model/Vacations/Vacations_view_model.dart';
 import 'package:mvvm/view_model/auth_view_model.dart';
-import 'package:mvvm/view_model/home_view_model.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import '../Dialogs/VacationsStatusDialog.dart';
 import '../Dialogs/myrido.dart';
 import '../res/components/constants.dart';
 import '../utils/routes/routes_name.dart';
@@ -662,6 +658,8 @@ class _MyRequest_ScreenState extends State<MyRequest_Screen> {
                                       );
                                 }):
                             Center(child: AutoSizeText("no data"),);
+                          case null:
+                            // TODO: Handle this case.
                         }
                         return Container();
                       }),

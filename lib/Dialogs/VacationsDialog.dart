@@ -119,6 +119,8 @@ class _VacationsDialogState extends State<VacationsDialog> {
                               );
                             });
 
+                      case null:
+                        // TODO: Handle this case.
                     }
                     return Container();
                   }),

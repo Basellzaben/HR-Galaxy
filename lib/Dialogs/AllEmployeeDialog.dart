@@ -122,6 +122,8 @@ class _AllEmployeeDialogState extends State<AllEmployeeDialog> {
                                 );
                               });
 
+                        case null:
+                          // TODO: Handle this case.
                       }
                       return Container();
                     }),

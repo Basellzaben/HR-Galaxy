@@ -586,6 +586,8 @@ class _DitalsTask_DialogState extends State<DitalsTask_Dialog> {
                                               )),
                                             );
                                           });
+                                    case null:
+                                      // TODO: Handle this case.
                                   }
                                   return Container();
                                 },
@@ -673,6 +675,8 @@ class _DitalsTask_DialogState extends State<DitalsTask_Dialog> {
                     ),
                   ]),
                 );
+              case null:
+                // TODO: Handle this case.
             }
             return Container();
           })),

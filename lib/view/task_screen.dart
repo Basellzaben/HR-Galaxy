@@ -1347,6 +1347,8 @@ class _task_screenState extends State<task_screen> {
                                 : Center(
                                     child: Text("no data"),
                                   );
+                          case null:
+                            // TODO: Handle this case.
                         }
                         return Container();
                       }),
