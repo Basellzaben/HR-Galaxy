@@ -1,6 +1,7 @@
 
 // ignore_for_file: non_constant_identifier_names, deprecated_member_use, avoid_print, prefer_typing_uninitialized_variables
 
+import 'package:arabic_font/arabic_font.dart';
 import 'package:flutter/material.dart';
 import 'package:mvvm/data/response/status.dart';
 import 'package:mvvm/res/components/round_button.dart';
@@ -27,6 +28,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
   final TextEditingController _Startdate = TextEditingController();
   final TextEditingController _Enddate = TextEditingController();
   final TextEditingController _EmpName = TextEditingController();
+  var state = false;
 
   late DateTime startDateTime;
   late DateTime endDateTime;
@@ -169,6 +171,73 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                             style: TextFormFieldColor(context),
                           ),
                         ),
+
+// buttons
+                        Padding(
+                          padding: const EdgeInsets.all(7.0),
+                          child: SizedBox(
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                  height: 50,
+                                  width:
+                                  MediaQuery.of(context).size.width / 2.1,
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: state
+                                          ? ColorTheme(context)
+                                          : Colors.grey,
+                                    ),
+                                    child: Text(
+                                      LanguageProvider.Llanguage('workingstateMap'),
+                                      style: ArabicTextStyle(
+                                          arabicFont: ArabicFont.tajawal,
+                                          color:
+                                         Colors.white,
+                                          fontSize: 15 ),
+                                    ),
+                                    onPressed: () async {
+                                      if (!state) {
+                                        setState(() {
+                                          state = true;
+                                        });
+                                      }
+                                    },
+                                  ),
+                                ),
+                                Spacer(),
+                                SizedBox(
+                                  height: 50,
+                                  width:
+                                  MediaQuery.of(context).size.width / 2.1,
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: state
+                                          ? Colors.grey
+                                          : ColorTheme(context),
+                                    ),
+                                    child: Text(
+                                      LanguageProvider.Llanguage('workingstate'),
+                                      style: ArabicTextStyle(
+                                          arabicFont: ArabicFont.tajawal,
+                                          color:
+                                          Colors.white,
+                                          fontSize: 15 ),
+                                    ),
+                                    onPressed: () async {
+                                      if (state) {
+                                        setState(() {
+                                          state = false;
+                                        });
+                                      }
+                                    },
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+
                         Container(
                     
                           margin: const EdgeInsets.only(left: 15, right: 15, top: 5),
@@ -299,7 +368,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                                   ),
                                 ),
                                 Container(
-                    
+
                                   width: MediaQuery
                                       .of(context)
                                       .size
@@ -377,62 +446,74 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                             fontSize: 20/MediaQuery.of(context).textScaleFactor,
                             onPress: () {
                               Map data = {
+                              "Emp_no": context.read<AuthViewModel>().UserName,
+                              "S_date": _Startdate.text,
+                              "E_date": _Enddate.text,
+                              "Lan": LanguageProvider.getLanguage()=="AR"?"Ar":"En",
+                            };
+                              if(!state){
+
+                               data = {
                                 "Emp_no": context.read<AuthViewModel>().UserName,
                                 "S_date": _Startdate.text,
                                 "E_date": _Enddate.text,
                                 "Lan": LanguageProvider.getLanguage()=="AR"?"Ar":"En",
                               };
-                    
-                    
+                              }else{
+                                 data = {
+                                  "Emp_no": context.read<AuthViewModel>().UserName,
+                                  "S_date": _Startdate.text,
+                                  "E_date": _Enddate.text,
+                                  "Lan": LanguageProvider.getLanguage()=="AR"?"Ar":"En",
+                                };
+                              }
+
                     
                               WidgetsBinding.instance.addPostFrameCallback((_) {
                                 final viewModel = context.read<ProfileViewModel>();
-                                viewModel.GetAttendancenew(data, context);
-                    
-                    
-                    
+
+
+    if(!state){
+      viewModel.GetAttendancenew(data, context);
+    }
+    else{
+      viewModel.GetAttendancenewMap(data, context);
+    }
                               });
                             },
                           ),
                         ),
-                        Container(
+
+
+
+                        //---Attence Map
+
+                      state?  Container(
                           margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
                           height: MediaQuery.sizeOf(context).height / 2+50,
                           // ,
                           child: Consumer<ProfileViewModel>(builder: (context, value, _) {
-                            switch (value.Attendance.status) {
+                            switch (value.AttendanceMap.status) {
                               case Status.LOADING:
                                 return const Center(child: CircularProgressIndicator());
                               case Status.ERROR:
-                                return Center(child: Text(value.Attendance.message.toString()));
+                                return Center(child: Text(value.AttendanceMap.message.toString()));
                               case Status.COMPLETED:
-                                return value.Attendance.data!.list != null
+                                return value.AttendanceMap.data!.list != null
                                     ? ListView.builder(
-                                    itemCount: value.Attendance.data!.list!.length,
+                                    itemCount: value.AttendanceMap.data!.list!.length,
                                     //   physics: const AlwaysScrollableScrollPhysics(), // new
                                     shrinkWrap: true,
                                     itemBuilder: (context, index) {
-                                      var startDate = DateFormat('yyyy-MM-dd').parse(value.Attendance.data!.list![index].attDate!);
-                    
+                                      var startDate = DateFormat('yyyy-MM-dd').parse(value.AttendanceMap.data!.list![index].transDate!);
+
                                       StartYear = startDate.year.toString();
                                       StartMonth = startDate.month.toString();
                                       StartDay = startDate.day.toString();
-                    
-                                      var str = value.Attendance.data!.list![index].sTime!;
-                                      var stre = value.Attendance.data!.list![index].eTime!;
-                                      var starttime;
-                                      var endtime;
-                                      if(str.isNotEmpty)
-                                        {
-                                           starttime = str.split(' ');
-                                        }
-                                      if(stre.isNotEmpty)
-                                        {
-                                           endtime = stre.split(' ');
-                                        }
-                    
-                    
-                    
+
+
+
+
                                       return Container(
                                         width: width,
                                         margin: const EdgeInsets.only(bottom: 10),
@@ -468,76 +549,25 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                                                           )
                                                         ],
                                                       ),
-                                                      textWidget(value.Attendance.data!.list![index].dayofweek1!, 20/sc, FontWeight.w500, ColorTheme(context)),
-                                                      const SizedBox(height: 5,),
-                                                      SizedBox(
-                                                          width:width * 0.25,
-                                                          child: textWidgetAligned(value.Attendance.data!.list![index].realDiffInMinDesc!, 15/sc, FontWeight.w500, ColorTheme(context),TextAlign.end)),
-                    /*
-                                                    SizedBox(height: 5,),
-                                                    SizedBox(
-                                                        width:width * 0.25,
-                                                        child: textWidgetAligned(value.Attendance.data!.list![index].decription!, 11, FontWeight.w500, ColorTheme(context),TextAlign.end)),
-                    */
-                    
+                                                    textWidget(value.AttendanceMap.data!.list![index].dayName!, 20/sc, FontWeight.w500, ColorTheme(context)),
+
                                                     ],
                                                   ),
                                                 ),
-                                                SizedBox(
-                                                  width: width * 0.25,
-                                                  child: Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      textWidget(LanguageProvider.Llanguage('IN'), 20/sc, FontWeight.w500,
-                                                          ColorTheme(context)),
-                                                      textWidget(str.isNotEmpty?starttime[0].trim():"", 20/sc, FontWeight.w800,
-                                                          greenColor),
-                                                      textWidget(str.isNotEmpty?starttime[1].trim():"", 34/sc, FontWeight.w800,
-                                                          greenColor),
-                                                      /*  Row(
-                                                      children: [
-                                                        textWidget(stre.length>0?endtime[0].trim():"", 10,
-                                                            FontWeight.w500, Colors.black),
-                                                        textWidget(stre.length>0?endtime[1].trim():"", 10, FontWeight.w500,
-                                                            appColor),
-                                                      ],
-                                                    )*/
-                                                    ],
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  width: width * 0.25,
-                                                  child: Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      textWidget( LanguageProvider.Llanguage('OUT'), 20/sc, FontWeight.w500,
-                                                          ColorTheme(context)),
-                                                      textWidget(stre.isNotEmpty?endtime[0].trim():"", 20/sc, FontWeight.w800,
-                                                          greenColor),
-                                                      textWidget(stre.isNotEmpty?endtime[1].trim():"", 34/sc, FontWeight.w800,
-                                                          greenColor),
-                                                      /*Row(
-                                                      children: [
-                                                        textWidget("00:00 ", 10,
-                                                            FontWeight.w500, Colors.black),
-                                                        textWidget("Early Exit", 10, FontWeight.w500,
-                                                            appColor),
-                                                      ],
-                                                    )*/
-                                                    ],
-                                                  ),
-                                                ),
+
+                                                Container(
+                                                    alignment:Alignment.center,
+                                                    margin: const EdgeInsets.only(left: 10,right: 10)
+                                                    ,child: textWidget(value.AttendanceMap.data!.list![index].decription!, 20/sc, FontWeight.w500, ColorTheme(context))),
+
                                               ],
                                             ),
-                                            const SizedBox(height: 5,),
-                                            Container(alignment:Alignment.topLeft,
-                                                margin: const EdgeInsets.only(left: 10,right: 10)
-                                                ,child: textWidget(value.Attendance.data!.list![index].decription!, 20/sc, FontWeight.w500, ColorTheme(context))),
-                    
+
                                           ],
-                    
+
                                         ),
                                       );
+
                                     })
                                     : const Center(
                                   child: Text("no data"),
@@ -547,7 +577,159 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                             }
                             return Container();
                           }),
-                        ),
+                        ): Container(
+                        margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
+                        height: MediaQuery.sizeOf(context).height / 2+50,
+                        // ,
+                        child: Consumer<ProfileViewModel>(builder: (context, value, _) {
+                          switch (value.Attendance.status) {
+                            case Status.LOADING:
+                              return const Center(child: CircularProgressIndicator());
+                            case Status.ERROR:
+                              return Center(child: Text(value.Attendance.message.toString()));
+                            case Status.COMPLETED:
+                              return value.Attendance.data!.list != null
+                                  ? ListView.builder(
+                                  itemCount: value.Attendance.data!.list!.length,
+                                  //   physics: const AlwaysScrollableScrollPhysics(), // new
+                                  shrinkWrap: true,
+                                  itemBuilder: (context, index) {
+                                    var startDate = DateFormat('yyyy-MM-dd').parse(value.Attendance.data!.list![index].attDate!);
+
+                                    StartYear = startDate.year.toString();
+                                    StartMonth = startDate.month.toString();
+                                    StartDay = startDate.day.toString();
+
+                                    var str = value.Attendance.data!.list![index].sTime!;
+                                    var stre = value.Attendance.data!.list![index].eTime!;
+                                    var starttime;
+                                    var endtime;
+                                    if(str.isNotEmpty)
+                                    {
+                                      starttime = str.split(' ');
+                                    }
+                                    if(stre.isNotEmpty)
+                                    {
+                                      endtime = stre.split(' ');
+                                    }
+
+
+
+                                    return Container(
+                                      width: width,
+                                      margin: const EdgeInsets.only(bottom: 10),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8, vertical: 8),
+                                      decoration: BoxDecoration(
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(12)),
+                                        border: Border.all(
+                                          color: ColorTheme(context), // Border color
+                                          width: 1.2, // Border width
+                                        ),
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                            children: [
+                                              SizedBox(
+                                                width: width * 0.27,
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        textWidget(StartDay!, 36/sc, FontWeight.w800, ColorTheme(context)),
+                                                        const SizedBox(width: 5),
+                                                        Column(
+                                                          children: [
+                                                            textWidget(months[int.parse(StartMonth!)-1], 18/sc, FontWeight.w900, Colors.black),
+                                                            textWidget(StartYear!, 18/sc, FontWeight.w500, Colors.black),
+                                                          ],
+                                                        )
+                                                      ],
+                                                    ),
+                                                    textWidget(value.Attendance.data!.list![index].dayofweek1!, 20/sc, FontWeight.w500, ColorTheme(context)),
+                                                    const SizedBox(height: 5,),
+                                                    SizedBox(
+                                                        width:width * 0.25,
+                                                        child: textWidgetAligned(value.Attendance.data!.list![index].realDiffInMinDesc!, 15/sc, FontWeight.w500, ColorTheme(context),TextAlign.end)),
+                                                    /*
+                                                    SizedBox(height: 5,),
+                                                    SizedBox(
+                                                        width:width * 0.25,
+                                                        child: textWidgetAligned(value.Attendance.data!.list![index].decription!, 11, FontWeight.w500, ColorTheme(context),TextAlign.end)),
+                    */
+
+                                                  ],
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: width * 0.25,
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    textWidget(LanguageProvider.Llanguage('IN'), 20/sc, FontWeight.w500,
+                                                        ColorTheme(context)),
+                                                    textWidget(str.isNotEmpty?starttime[0].trim():"", 20/sc, FontWeight.w800,
+                                                        greenColor),
+                                                    textWidget(str.isNotEmpty?starttime[1].trim():"", 34/sc, FontWeight.w800,
+                                                        greenColor),
+                                                    /*  Row(
+                                                      children: [
+                                                        textWidget(stre.length>0?endtime[0].trim():"", 10,
+                                                            FontWeight.w500, Colors.black),
+                                                        textWidget(stre.length>0?endtime[1].trim():"", 10, FontWeight.w500,
+                                                            appColor),
+                                                      ],
+                                                    )*/
+                                                  ],
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: width * 0.25,
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    textWidget( LanguageProvider.Llanguage('OUT'), 20/sc, FontWeight.w500,
+                                                        ColorTheme(context)),
+                                                    textWidget(stre.isNotEmpty?endtime[0].trim():"", 20/sc, FontWeight.w800,
+                                                        greenColor),
+                                                    textWidget(stre.isNotEmpty?endtime[1].trim():"", 34/sc, FontWeight.w800,
+                                                        greenColor),
+                                                    /*Row(
+                                                      children: [
+                                                        textWidget("00:00 ", 10,
+                                                            FontWeight.w500, Colors.black),
+                                                        textWidget("Early Exit", 10, FontWeight.w500,
+                                                            appColor),
+                                                      ],
+                                                    )*/
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 5,),
+                                          Container(alignment:Alignment.topLeft,
+                                              margin: const EdgeInsets.only(left: 10,right: 10)
+                                              ,child: textWidget(value.Attendance.data!.list![index].decription!, 20/sc, FontWeight.w500, ColorTheme(context))),
+
+                                        ],
+
+                                      ),
+                                    );
+                                  })
+                                  : const Center(
+                                child: Text("no data"),
+                              );
+                            case null:
+                              break;
+                          }
+                          return Container();
+                        }),
+                      ),
                       ],
                     ),
                   ),

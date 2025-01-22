@@ -95,7 +95,7 @@ class _LoginViewState extends State<LoginView> {
       String ip = await DatabaseHelper.getIP();
       TextEditingController _NOte = TextEditingController();
       if (ip == "") {
-         //await DatabaseHelper.updateIP("http://94.249.83.196:9072");
+        // await DatabaseHelper.updateIP("http://94.249.83.196:9072");
 
         await CustomDialog.showDoneDialog(
            title: LanguageProvider.Llanguage("IpAddress"),

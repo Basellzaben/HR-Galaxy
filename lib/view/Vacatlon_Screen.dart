@@ -85,8 +85,8 @@ class _VacatlonScreenState extends State<VacatlonScreen> {
                 (Route<dynamic> route) => false);
 
         return false;
-      },
-      child: Directionality(
+        },
+    child: Directionality(
 
         textDirection: LanguageProvider.getDirection(),
         child: Scaffold(

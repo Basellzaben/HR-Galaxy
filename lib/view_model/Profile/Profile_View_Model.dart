@@ -9,6 +9,7 @@ import 'package:mvvm/model/Profile/LineDataModel.dart';
 import 'package:mvvm/model/Profile/SalaryslipModel.dart';
 
 import '../../data/response/api_response.dart';
+import '../../model/Profile/GetAttendanceMapModel.dart';
 import '../../model/Profile/GetAttendanceModel.dart';
 import '../../model/Profile/GetBalanceModel.dart';
 import '../../model/Profile/ProfileDataModel.dart';
@@ -35,6 +36,7 @@ class ProfileViewModel with ChangeNotifier {
   ApiResponse<SalaryslipModel> Salaryslip_bonuses = ApiResponse.loading();
   ApiResponse<SalaryslipModel> Salaryslip_Discount = ApiResponse.loading();
   ApiResponse<GetAttendanceModel> Attendance = ApiResponse.loading();
+  ApiResponse<GetAttendanceMapModel> AttendanceMap = ApiResponse.loading();
   ApiResponse<GetNotifiModel> Noto = ApiResponse.loading();
   ApiResponse<GetNotifiModel> Notosend = ApiResponse.loading();
   ApiResponse<GetCalenderModel> CalenderData = ApiResponse.loading();
@@ -70,7 +72,13 @@ class ProfileViewModel with ChangeNotifier {
   GetAttendance(ApiResponse<GetAttendanceModel> response){
     Attendance = response ;
     notifyListeners();
-  }  setLineData(ApiResponse<LineDataModel> response){
+  }
+  GetAttendanceMap(ApiResponse<GetAttendanceMapModel> response){
+    AttendanceMap = response ;
+    notifyListeners();
+  }
+
+  setLineData(ApiResponse<LineDataModel> response){
     LineData = response ;
     notifyListeners();
   }
@@ -224,6 +232,23 @@ class ProfileViewModel with ChangeNotifier {
 
     });
   }
+  ///-------
+  Future<void> GetAttendancenewMap (dynamic data , BuildContext context) async {
+
+    GetAttendanceMap(ApiResponse.loading());
+
+    _myRepo.GetAttendancenewMap(data).then((value){
+      print("response7");
+      GetAttendanceMap(ApiResponse.completed(value));
+
+
+    }).onError((error, stackTrace){
+
+      GetAttendanceMap(ApiResponse.error(error.toString()));
+
+    });
+  }
+  /// //-----
   Future<void> fetchSalaryslipHdr (dynamic data , BuildContext context) async {
 
     setSalaryslipHdr(ApiResponse.loading());

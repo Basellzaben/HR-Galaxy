@@ -155,6 +155,10 @@ static Future<String> getLoginEndPoint() async {
   String ip = await DatabaseHelper.getIP();
   return '$ip/GetAttendance';
 }
+  static Future<String> GetAttendanceMap() async {
+    String ip = await DatabaseHelper.getIP();
+    return '$ip/GetPlanAtt';
+  }
   // static var GetNotiData =  "http://94.249.83.196:9072" + '/GetNotiData' ;
       static Future<String> GetNotiData() async {
   String ip = await DatabaseHelper.getIP();

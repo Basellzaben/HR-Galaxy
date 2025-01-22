@@ -29,26 +29,32 @@ class _HomeNewState extends State<HomeNew>{
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Scaffold(
-      bottomNavigationBar: SizedBox(
-
-        child: BottomNavigationBar(
-          type: BottomNavigationBarType.shifting,
-
-          selectedItemColor: Colors.white,
-          unselectedItemColor: Colors.white.withOpacity(.60),
-          selectedFontSize: 14,
-          unselectedFontSize: 14,
-          currentIndex: index,
-          onTap: (value) {
-            // Respond to item press.
-            setState(() {
-              index=value;
-            });
-          }, items: MenuItemList.map((MenuItem menuItem) => BottomNavigationBarItem(icon: Icon(menuItem.iconDatal),backgroundColor: ColorTheme(context),label: menuItem.text,)).toList(),
-
-          ),
-      ),body: _buildBody[index]);
+    return WillPopScope(
+      onWillPop: () async {
+        // إعادة false لتعطيل زر الرجوع
+        return false;
+      },
+      child: Scaffold(
+        bottomNavigationBar: SizedBox(
+      
+          child: BottomNavigationBar(
+            type: BottomNavigationBarType.shifting,
+      
+            selectedItemColor: Colors.white,
+            unselectedItemColor: Colors.white.withOpacity(.60),
+            selectedFontSize: 14,
+            unselectedFontSize: 14,
+            currentIndex: index,
+            onTap: (value) {
+              // Respond to item press.
+              setState(() {
+                index=value;
+              });
+            }, items: MenuItemList.map((MenuItem menuItem) => BottomNavigationBarItem(icon: Icon(menuItem.iconDatal),backgroundColor: ColorTheme(context),label: menuItem.text,)).toList(),
+      
+            ),
+        ),body: _buildBody[index]),
+    );
   }
 
 }

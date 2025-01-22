@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:mvvm/view/Profie_Screen/widget/Calender_Date.dart';
 import 'package:mvvm/view/Profie_Screen/widget/LineChart.dart';
 import 'package:mvvm/view/Profie_Screen/widget/Permanency_status.dart';
-import 'package:mvvm/view/Profie_Screen/widget/TimeLine.dart';
 import 'package:mvvm/view_model/services/LanguagePrvider.dart';
 import 'package:provider/provider.dart';
 
@@ -93,7 +92,7 @@ class _TapControllerWidgetState extends State<TapController> {
               children: [
                 const PermanencyStatus(),
                 const MyDatePickerWidget(),
-                const TimeLine(),
+                //const TimeLine(),
                 MyChartWidget()
               ],
             ),

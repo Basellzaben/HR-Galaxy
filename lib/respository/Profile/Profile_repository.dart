@@ -12,6 +12,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:mvvm/res/app_url.dart';
 
+import '../../model/Profile/GetAttendanceMapModel.dart';
 import '../../model/Profile/GetAttendanceModel.dart';
 import '../../model/Profile/GetBalanceModel.dart';
 import '../../model/Profile/LineDataModel.dart';
@@ -230,7 +231,26 @@ class ProfileRespository {
       rethrow ;
     }
   }
+//-----
+  Future<GetAttendanceMapModel> GetAttendancenewMap(dynamic data )async{
 
+    try{
+      print(data.toString());
+      String json = jsonEncode(data);
+      print(json.toString());
+      String url = await AppUrl.GetAttendanceMap();
+
+      dynamic response = await _apiServices.getPostApiResponse1(url,json);
+
+      return response = GetAttendanceMapModel.fromJson(response);
+
+    }catch(e){
+      print ("response2MAP"+e.toString());
+      rethrow ;
+    }
+  }
+
+  //----
 
   Future<GetNotifiModel> GetNotifidata(dynamic data )async{
 

@@ -114,7 +114,7 @@ class _HomeHRScreenState extends State<HomeHRScreen> {
     var LanguageProvider = Provider.of<Language>(context, listen: false);
     return WillPopScope(
       onWillPop: () async {
-        exit(0);
+       return false;
       },
       child: Directionality(
         textDirection: LanguageProvider.getDirection(),
