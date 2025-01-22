@@ -111,10 +111,12 @@ class HomeNewViewModel with ChangeNotifier {
             context.read<Vacationsviewmodel>().setINOUT1(-1, '');
 
           });
-          Utils.flushBarSussMessage(value.list![0].msgEN.toString(),context);
+          var LanguageProvider1 = Provider.of<Language>(context, listen: false);
+
+          var lang =  LanguageProvider1.getLanguage();
+          Utils.flushBarSussMessage(lang == "EN" ? value.list![0].msgEN.toString() : value.list![0].msg.toString() ,context);
           String currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
           print(context.read<AuthViewModel>().UserName);
-          var LanguageProvider1 = Provider.of<Language>(context, listen: false);
 
           Map data = {
             'EmployeeNo': context.read<AuthViewModel>().UserName,
@@ -147,7 +149,10 @@ print(data.toString());
       setdeleteReq(ApiResponse.completed(value));
       if(value.list![0].msgID==1)
         {
-  Utils.flushBarSussMessage(value.list![0].msgEN.toString(),context);
+           var LanguageProvider1 = Provider.of<Language>(context, listen: false);
+
+          var lang =  LanguageProvider1.getLanguage();
+  Utils.flushBarSussMessage(lang == "EN" ? value.list![0].msgEN.toString() : value.list![0].msg.toString(),context);
   Future.delayed(Duration(seconds: 1), () {
   Navigator.pushNamedAndRemoveUntil(
     context,
